@@ -1,6 +1,8 @@
-# FastAPI Template V2
+# FastAPI boilerplate V2
 
 A modern, production-ready FastAPI template with UV package management, Jinja2 templates, and one-command deployment.
+![image](https://github.com/user-attachments/assets/d4822193-aa75-4a62-9eb4-80c8d78ce305)
+
 
 ## 🚀 Features
 
@@ -230,4 +232,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 **Happy coding! 🎉**
-# fastapi-boilerplate-v2
