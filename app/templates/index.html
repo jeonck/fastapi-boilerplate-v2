@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}{{ app_name }} - FastAPI Template{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Hero Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-primary">
+                <i class="bi bi-rocket-takeoff"></i>
+                {{ app_name }}
+            </h1>
+            <p class="lead">{{ app_description }}</p>
+            <div class="badges mt-3">
+                <span class="badge bg-success">FastAPI</span>
+                <span class="badge bg-info">UV Package Manager</span>
+                <span class="badge bg-warning">Jinja2 Templates</span>
+                <span class="badge bg-secondary">Bootstrap 5</span>
+            </div>
+        </div>
+
+        <!-- Quick Start Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-book display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">API Documentation</h5>
+                        <p class="card-text">
+                            Interactive API documentation with Swagger UI. 
+                            Test endpoints directly from your browser.
+                        </p>
+                        <a href="/docs" target="_blank" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                            Open Swagger UI
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-file-text display-4 text-success mb-3"></i>
+                        <h5 class="card-title">ReDoc</h5>
+                        <p class="card-text">
+                            Alternative API documentation with ReDoc. 
+                            Clean and comprehensive API reference.
+                        </p>
+                        <a href="/redoc" target="_blank" class="btn btn-success">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                            Open ReDoc
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-gear"></i>
+                    Template Features
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> FastAPI with async support</li>
+                            <li><i class="bi bi-check-circle text-success"></i> UV for fast dependency management</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Pydantic for data validation</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Jinja2 templating engine</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> Structured project layout</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Environment configuration</li>
+                            <li><i class="bi bi-check-circle text-success"></i> One-command deployment</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Bootstrap 5 UI components</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Health Status -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-heart-pulse"></i>
+                    System Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="status-indicator bg-success rounded-circle me-3" 
+                                 style="width: 12px; height: 12px;"></div>
+                            <div>
+                                <strong>API Status:</strong> 
+                                <span class="text-success">Healthy</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                Version: {{ app_version }} | Environment: {{ environment | title }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <button id="healthCheck" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            Check Health
+                        </button>
+                    </div>
+                </div>
+                <div id="healthResult" class="mt-3" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-lightning"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100" onclick="testUsersAPI()">
+                            <i class="bi bi-people"></i>
+                            Test Users API
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-info w-100" onclick="pingAPI()">
+                            <i class="bi bi-wifi"></i>
+                            Ping API
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-success w-100" onclick="getAppInfo()">
+                            <i class="bi bi-info-circle"></i>
+                            App Info
+                        </button>
+                    </div>
+                </div>
+                <div id="quickActionResult" class="mt-3" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// API Testing Functions
+async function performAPICall(url, elementId) {
+    const resultDiv = document.getElementById(elementId);
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<div class="text-center"><i class="bi bi-hourglass-split"></i> Loading...</div>';
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (response.ok) {
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>Success!</strong>
+                    <pre class="mt-2 mb-0">${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <strong>Error ${response.status}:</strong> ${data.detail || 'Unknown error'}
+                </div>
+            `;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <strong>Network Error:</strong> ${error.message}
+            </div>
+        `;
+    }
+}
+
+// Health Check
+document.getElementById('healthCheck').addEventListener('click', function() {
+    performAPICall('/api/health/', 'healthResult');
+});
+
+// Quick Actions
+function testUsersAPI() {
+    performAPICall('/api/users/', 'quickActionResult');
+}
+
+function pingAPI() {
+    performAPICall('/api/health/ping', 'quickActionResult');
+}
+
+function getAppInfo() {
+    performAPICall('/api/health/info', 'quickActionResult');
+}
+</script>
+{% endblock %}
